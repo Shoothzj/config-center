@@ -1,0 +1,78 @@
+swagger: "2.0"
+info:
+  description: "Notify API"
+  version: "1.0.0"
+  title: "Config Notify"
+  contact:
+    email: "shoothzj@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/v1"
+schemes:
+  - "https"
+  - "http"
+parameters:
+  env:
+    in: "path"
+    name: "env"
+    required: true
+    type: string
+    pattern: "[a-fA-F]{1,31}"
+  cluster:
+    in: "path"
+    name: "cluster"
+    required: true
+    type: string
+    pattern: "[a-fA-F]{1,31}"
+  config_name:
+    in: "path"
+    name: "config_name"
+    required: true
+    type: string
+    pattern: "[a-fA-F]{1,31}"
+  key:
+    in: "path"
+    name: "key"
+    required: true
+    type: string
+    pattern: "[a-fA-F]{1,31}"
+paths:
+  /envs/{env}/clusters/{cluster}/configs/{config_name}/keys/{key}:
+    get:
+      tags:
+        - "notify"
+      summary: "get config"
+      description: ""
+      operationId: "getConfig"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - $ref: "#/parameters/env"
+        - $ref: "#/parameters/cluster"
+        - $ref: '#/parameters/config_name'
+        - $ref: '#/parameters/key'
+        - in: "body"
+          name: "notify request body"
+          description: "Notify Key Req"
+          required: true
+          schema:
+            $ref: "#/definitions/NotifyKeyReq"
+      responses:
+        "200":
+          description: "OK"
+        "405":
+          description: "Invalid input"
+definitions:
+  NotifyKeyReq:
+    type: "object"
+    properties:
+      operation_type:
+        type: "string"
+        description: "operation type, add、del、mod"
+      old_version:
+        type: "integer"
+        format: "int8"
+        description: "data version when events happened"
